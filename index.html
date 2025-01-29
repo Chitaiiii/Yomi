@@ -13,10 +13,10 @@
             overflow: hidden; /* Prevent scrolling */
         }
         #game-container {
-            margin-top: 50px;
+            margin-top: 5vh;
             position: relative;
-            width: 600px; /* Game container width */
-            height: 600px; /* Game container height */
+            width: 80vw; /* Responsive width */
+            height: 60vh; /* Responsive height */
             margin: auto;
             background: white;
             border-radius: 10px;
@@ -24,26 +24,26 @@
         }
         .object {
             position: absolute;
-            font-size: 60px; /* Increased font size */
+            font-size: 10vw; /* Responsive font size */
             cursor: pointer;
             user-select: none;
             animation: fall 3s infinite;
         }
         @keyframes fall {
             from {
-                top: -50px;
+                top: -10vh;
             }
             to {
                 top: 100%;
             }
         }
         #message {
-            font-size: 32px; /* Increased font size for message */
+            font-size: 5vw; /* Responsive font size for message */
             font-weight: bold;
             margin-top: 20px;
         }
         #counter {
-            font-size: 24px; /* Larger font size for score */
+            font-size: 4vw; /* Responsive font size for score */
         }
         #valentine-image {
             display: none; /* Hidden by default */
@@ -52,18 +52,18 @@
             left: 50%; /* Horizontally center */
             transform: translate(-50%, -50%); /* Adjust position to truly center */
             width: 50%; /* Adjust width to 50% of the game container */
-            height: 50%; /* Adjust height to 50% of the game container */
+            height: auto; /* Keep the aspect ratio */
             object-fit: contain; /* Ensure the image fits without distorting */
             border-radius: 10px;
         }
         .heart-rain {
             position: absolute;
-            font-size: 30px;
+            font-size: 5vw;
             animation: heart-fall 2s infinite;
         }
         @keyframes heart-fall {
             0% {
-                top: -30px;
+                top: -5vh;
             }
             100% {
                 top: 100%;
