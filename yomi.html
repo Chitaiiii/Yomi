@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine Mini Game</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: pink;
+            margin: 0;
+            overflow: hidden; /* Prevent scrolling */
+        }
+        #game-container {
+            margin-top: 50px;
+            position: relative;
+            width: 600px; /* Game container width */
+            height: 600px; /* Game container height */
+            margin: auto;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .object {
+            position: absolute;
+            font-size: 60px; /* Increased font size */
+            cursor: pointer;
+            user-select: none;
+            animation: fall 3s infinite;
+        }
+        @keyframes fall {
+            from {
+                top: -50px;
+            }
+            to {
+                top: 100%;
+            }
+        }
+        #message {
+            font-size: 32px; /* Increased font size for message */
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        #counter {
+            font-size: 24px; /* Larger font size for score */
+        }
+        #valentine-image {
+            display: none; /* Hidden by default */
+            position: absolute; /* Position it relative to #game-container */
+            top: 50%; /* Vertically center */
+            left: 50%; /* Horizontally center */
+            transform: translate(-50%, -50%); /* Adjust position to truly center */
+            width: 50%; /* Adjust width to 50% of the game container */
+            height: 50%; /* Adjust height to 50% of the game container */
+            object-fit: contain; /* Ensure the image fits without distorting */
+            border-radius: 10px;
+        }
+        .heart-rain {
+            position: absolute;
+            font-size: 30px;
+            animation: heart-fall 2s infinite;
+        }
+        @keyframes heart-fall {
+            0% {
+                top: -30px;
+            }
+            100% {
+                top: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Catch 10 Hearts, Avoid the Boys!</h1>
+    <p id="counter">Hearts Collected: 0</p>
+    <div id="game-container"></div>
+    <p id="message"></p>
+
+    <!-- Background Music -->
+    <audio id="background-music" loop>
+        <source src="met.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Sound Effects for Hearts and Boys -->
+    <audio id="heart-sound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+    <audio id="boy-sound" src="https://www.soundjay.com/button/beep-08b.wav"></audio>
+
+    <!-- Valentine Image (Hidden Initially) -->
+    <img id="valentine-image" src="valentine.png" alt="Valentine" />
+
+    <script>
+        let score = 0;
+        const gameContainer = document.getElementById('game-container');
+        const counter = document.getElementById('counter');
+        const heartSound = document.getElementById('heart-sound');
+        const boySound = document.getElementById('boy-sound');
+        const backgroundMusic = document.getElementById('background-music');
+        const valentineImage = document.getElementById('valentine-image');
+        
+        // Trigger audio play when the user clicks anywhere on the page
+        document.body.addEventListener('click', function() {
+            backgroundMusic.play();
+        });
+
+        function spawnObject() {
+            const object = document.createElement('span');
+            object.classList.add('object');
+            const randomLeft = Math.random() * (gameContainer.offsetWidth - 60);
+            object.style.left = randomLeft + 'px';
+            
+            if (Math.random() < 0.7) {
+                object.innerHTML = '❤️'; // Heart
+                object.addEventListener('click', () => {
+                    score++;
+                    counter.innerText = `Hearts Collected: ${score}`;
+                    heartSound.play(); // Play heart collection sound
+                    object.remove();
+                    if (score >= 10) {
+                        document.getElementById('message').innerHTML = "💖 Will you be my Valentine? 💖";
+                        valentineImage.style.display = 'block'; // Show image
+                        gameContainer.style.display = 'none'; // Hide game container
+                        startHeartRain(); // Start the heart rain effect
+                        clearInterval(spawnInterval);
+                    }
+                });
+            } else {
+                object.innerHTML = '👦'; // Boy (Avoid)
+                object.addEventListener('click', () => {
+                    score = Math.max(0, score - 1);
+                    counter.innerText = `Hearts Collected: ${score}`;
+                    boySound.play(); // Play boy hit sound
+                    object.remove();
+                });
+            }
+            gameContainer.appendChild(object);
+            setTimeout(() => object.remove(), 3000);
+        }
+
+        function startHeartRain() {
+            for (let i = 0; i < 50; i++) { // Create 50 hearts across the page
+                const heart = document.createElement('span');
+                heart.classList.add('heart-rain');
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * window.innerWidth + 'px'; // Random position across the page
+                heart.style.animationDuration = Math.random() * 3 + 2 + 's'; // Random fall speed
+                document.body.appendChild(heart);
+                
+                // Remove hearts after they fall
+                setTimeout(() => heart.remove(), 5000);
+            }
+        }
+
+        const spawnInterval = setInterval(spawnObject, 1000); // Spawn objects every 1 second
+    </script>
+</body>
+</html>
